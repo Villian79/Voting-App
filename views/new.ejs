@@ -1,0 +1,13 @@
+<% include ./partials/header %>
+
+<h1>Create a new POLL here...</h1>
+
+<form action="/polls" method="POST">
+    <input type="text" name="name" placeholder="Poll title">
+    <input type="text" name="author" placeholder="Author">
+    <button>Submit!</button>
+</form>
+
+<a href='/polls'>Go BACK</a>
+
+<% include ./partials/footer %>
