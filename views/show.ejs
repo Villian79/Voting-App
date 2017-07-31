@@ -1,0 +1,18 @@
+<% include ./partials/header %>
+
+
+<div class="container">
+    <h1><%= poll.name %></h1>
+    <% poll.options.forEach(function(option){ %>
+        <div class="radio">
+            <label>
+                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                    <%= option %>
+            </label>
+        
+        </div>
+    <% }); %>
+</div>
+
+
+<% include ./partials/footer %>

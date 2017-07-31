@@ -7,15 +7,15 @@
         <p>Here you can participate in a variety of polls and create your own polls as well...</p>
         <p><a class='btn btn-primary btn-lg' href='/polls/new'>Add your own poll</a></p>
     </header>
-    
     <div class='row'>
+        <!-- Find all posts and display info about each one -->
         <% polls.forEach(function(poll){ %>
             <div class='col-lg-12'>
                 <div class="list-group polls">
-                    <a href="#" class="list-group-item active">
+                    <div class="list-group-item active">
                         <h4 class="list-group-item-heading"><%= poll.name %></h4>
-                        <p class="list-group-item-text">by <em><%= poll.author %></em></p>
-                    </a>
+                        <p class="list-group-item-text">by <em><%= poll.author %></em><a href="/polls/<%= poll._id %>" class="btn btn-success btn-xs pull-right">Check this poll</a></p>
+                    </div>
                 </div>
             </div>
         <% }); %>
