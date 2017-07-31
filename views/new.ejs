@@ -1,13 +1,24 @@
 <% include ./partials/header %>
 
-<h1>Create a new POLL here...</h1>
-
-<form action="/polls" method="POST">
-    <input type="text" name="name" placeholder="Poll title">
-    <input type="text" name="author" placeholder="Author">
-    <button>Submit!</button>
-</form>
-
-<a href='/polls'>Go BACK</a>
+<div class="container">
+    <div class="row">
+        <h1 class="formheader">Create a new POLL here...</h1>
+        
+        <form class="newform" action="/polls" method="POST">
+            <div class="form-group">
+                <input class="form-control" type="text" name="name" placeholder="Poll title">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="author" placeholder="Author">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+            </div>
+            <a href='/polls'>Go BACK</a>
+        </form>
+        
+        
+    </div>
+</div>
 
 <% include ./partials/footer %>
