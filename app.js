@@ -10,7 +10,7 @@ var seedDB = require('./seed');
 seedDB();
 
 //connecting to MongoDB
-mongoose.connect('mongodb://localhost/voting_app', {useMongoClient: true});
+mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost/voting_app', {useMongoClient: true});
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
