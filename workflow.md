@@ -54,3 +54,7 @@ CREATE route  /polls          POST     Add a new poll to the DB
 SHOW route    /polls/:id      GET      Show info about one poll
 
 
+
+============================================================================
+#Make the app modular.
+*Create user and poll models

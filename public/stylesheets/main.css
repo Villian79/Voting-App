@@ -10,3 +10,8 @@
     width: 30%;
     margin: 35px auto;
 }
+
+#newoption{
+    width: 30%;
+    display: none;
+}

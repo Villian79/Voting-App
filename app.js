@@ -3,6 +3,12 @@ var app         = express();
 var bodyParser  = require('body-parser');
 var mongoose    = require('mongoose');
 
+var Poll = require('./models/poll');
+var User = require('./models/user');
+var seedDB = require('./seed');
+
+seedDB();
+
 //connecting to MongoDB
 mongoose.connect('mongodb://localhost/voting_app', {useMongoClient: true});
 mongoose.Promise = global.Promise;
@@ -11,14 +17,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('Voting App is connected to the DB');
 });
-//SCHEMA and Model setup
-var pollSchema = mongoose.Schema({
-    name: String,
-    author: String,
-    options: []
-});
 
-var Poll = mongoose.model('Poll', pollSchema);
 //creating a test poll example to verify that everything works fine
 //=========================
 /*
@@ -72,9 +71,7 @@ app.post('/polls', function(req, res){
     var option1 = req.body.option1;
     var option2 = req.body.option2;
     var options = [option1, option2];
-    console.log(options);
     var newPoll = {name: name, author: author, options: options};
-    console.log(req.body);
     //Create a new poll and add it to the database
     Poll.create(newPoll, function(err, poll){
         if(err) return console.error(err);
@@ -102,6 +99,19 @@ app.get('/polls/:id', function(req, res){
         }
     });
 });
+
+//Route to get a POLL response from the user
+app.post('/polls/:id/final', function(req, res){
+    Poll.findById(req.params.id, function(err, foundPoll){
+        if(err) return console.log("Your poll was not found");
+        else{
+            foundPoll.options.push(req.body.optionnew);
+            foundPoll.save();
+            res.send('Thank you for your response');
+        }
+    });
+});
+
 
 
 app.listen(process.env.PORT, process.env.IP, ()=>{
