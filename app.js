@@ -107,7 +107,7 @@ app.post('/polls/:id/final', function(req, res){
         else{
             foundPoll.options.push(req.body.optionnew);
             foundPoll.save();
-            res.send('Thank you for your response');
+            res.redirect('/polls');
         }
     });
 });
