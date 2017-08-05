@@ -1,7 +1,8 @@
-var express     = require('express');
-var app         = express();
-var bodyParser  = require('body-parser');
-var mongoose    = require('mongoose');
+var express         = require('express');
+var app             = express();
+var bodyParser      = require('body-parser');
+var mongoose        = require('mongoose');
+var methodOverride  = require('method-override');
 
 var Poll = require('./models/poll');
 var User = require('./models/user');
@@ -18,41 +19,17 @@ db.once('open', function() {
   console.log('Voting App is connected to the DB');
 });
 
-//creating a test poll example to verify that everything works fine
-//=========================
-/*
-Poll.create({
-    name: 'Who would you like to fuck tonight?',
-    author: 'Incognito',
-    options: ['Ting Ting', 'Kandy', 'Ira']
-}, function(err, poll){
-    if(err) return console.error(err);
-    else{
-        console.log('You have just added a new poll to the database....');
-        console.log(poll);
-    }
-});
-*/
-//==========================
-
-
+//Config
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride('_method'));
 
-//Seed data to start with. Not required after DB creation
-/*
-var polls = [
-                {name: "What soccer team is the best?", author: "Villian79"},
-                {name: "What computer game is the best?", author: "Villian79"},
-                {name: "What season is the best?", author: "Villian79"}
-            ];
-*/
-
-
+//LANDING page route
 app.get('/', function(req, res){
     res.render('landing');
 });
+
 //INDEX route - show all the polls
 app.get('/polls', function(req, res){
     //Get all the polls from DB
@@ -63,6 +40,7 @@ app.get('/polls', function(req, res){
         }
     });
 });
+
 //CREATE route - add new poll to DB
 app.post('/polls', function(req, res){
     //Get data from the form and add it to the polls array
@@ -88,31 +66,49 @@ app.post('/polls', function(req, res){
 app.get('/polls/new', function(req, res){
     res.render('new');
 });
-//SHOW route - show infor about certain poll
+
+//SHOW route - show info about certain poll
 app.get('/polls/:id', function(req, res){
     //Find the poll with the provided ID
+    console.log(req.params.id);
+    
     Poll.findById(req.params.id, function(err, foundPoll){
         if(err) return console.error(err);
         else{
             //Render the template page for that poll
+            console.log(foundPoll);
             res.render('show', {poll: foundPoll});
         }
     });
 });
-
-//Route to get a POLL response from the user
-app.post('/polls/:id/final', function(req, res){
+//=============================================================
+app.get('/polls/:id/edit', function(req, res){
     Poll.findById(req.params.id, function(err, foundPoll){
-        if(err) return console.log("Your poll was not found");
+        if(err) return console.error(err);
         else{
-            foundPoll.options.push(req.body.optionnew);
-            foundPoll.save();
-            res.redirect('/polls');
+            //Render the template page for that poll
+            res.render('poll', {poll: foundPoll});
         }
     });
 });
-
-
+//=============================================================
+//UPDATE Route to post a POLL response from the user
+app.put('/polls/:id', function(req, res){
+    Poll.findById(req.params.id, function(err, foundPoll){
+        if(err) return console.error(err);
+        else{
+            if(req.body.optionnew === ''){
+                res.redirect('/polls/'+req.params.id);
+            }
+            else{
+                foundPoll.options.push(req.body.optionnew);
+                foundPoll.save();
+                console.log(foundPoll);
+                res.redirect('/polls/'+req.params.id);
+            }
+        }
+    });
+});
 
 app.listen(process.env.PORT, process.env.IP, ()=>{
     console.log('Server is listening to PORT: ' + process.env.PORT);

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 //SCHEMA and Model setup
-var pollSchema = mongoose.Schema({
+var pollSchema = new mongoose.Schema({
     name: String,
     author: String,
     options: []
