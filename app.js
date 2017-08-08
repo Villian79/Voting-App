@@ -40,6 +40,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride('_method'));
 
+app.use(function(req, res, next){
+    res.locals.currentUser = req.user;
+    next();
+});
+
 
 //===================================================================
 //ROUTES
@@ -52,11 +57,12 @@ app.get('/', function(req, res){
 
 //INDEX route - show all the polls
 app.get('/polls', function(req, res){
+    console.log(req);
     //Get all the polls from DB
     Poll.find({}, (err, polls)=>{
         if(err) return console.error(err);
         else{
-            res.render('polls/index', {polls: polls});
+            res.render('polls/index', {polls: polls, currentUser: req.user});
         }
     });
 });
