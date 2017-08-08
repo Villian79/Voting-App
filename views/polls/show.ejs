@@ -1,8 +1,8 @@
-<% include ./partials/header %>
+<% include ../partials/header %>
 
 
 <div class="container">
-    <form action="/polls/<%= poll._id %>?_method=PUT" method="POST">
+    
         <h1><%= poll.name %></h1>
         <% for(var i = 0; i < poll.options.length; i++){ %>
             <div class="radio">
@@ -22,8 +22,8 @@
                 <input class="form-control" id="newoption" type="text" name="optionnew" placeholder="Add your own option here...">
             </div>
         <button class="btn btn-success btn-sm">Submit</button>
-    </form>
+  
 </div>
 
 
-<% include ./partials/footer %>
+<% include ../partials/footer %>

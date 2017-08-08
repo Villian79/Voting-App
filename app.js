@@ -56,7 +56,7 @@ app.get('/polls', function(req, res){
     Poll.find({}, (err, polls)=>{
         if(err) return console.error(err);
         else{
-            res.render('index', {polls: polls});
+            res.render('polls/index', {polls: polls});
         }
     });
 });
@@ -84,7 +84,7 @@ app.post('/polls', function(req, res){
 });
 //NEW route - show the form to create a new poll
 app.get('/polls/new', isLoggedIn, function(req, res){
-    res.render('new');
+    res.render('polls/new');
 });
 
 //SHOW route - show info about certain poll
@@ -97,7 +97,7 @@ app.get('/polls/:id', function(req, res){
         else{
             //Render the template page for that poll
             console.log(foundPoll);
-            res.render('show', {poll: foundPoll});
+            res.render('polls/show', {poll: foundPoll});
         }
     });
 });
@@ -107,7 +107,7 @@ app.get('/polls/:id/edit', function(req, res){
         if(err) return console.error(err);
         else{
             //Render the template page for that poll
-            res.render('poll', {poll: foundPoll});
+            res.render('polls/poll', {poll: foundPoll});
         }
     });
 });
