@@ -9,7 +9,8 @@
     </header>
     
     <div class='row'>
-        <div class='col-lg-6 col-md-6 col-sm-6 col-xs-6'>    
+        <div class='col-lg-6 col-md-6 col-sm-6 col-xs-6'>
+            <h3>All post are listed bellow:</h3>    
             <!-- Find all posts and display info about each one -->
             <% polls.forEach(function(poll){ %>
                 
@@ -24,7 +25,26 @@
             <% }); %>
         </div>
         <!-- Here should be user's polls displayed -->
-        
+        <div class='col-lg-6 col-md-6 col-sm-6 col-xs-6'>
+            <h1><h3>Your posts:</h3></h1>
+            <!-- Find all user's posts and display info about each one -->
+            
+                <% polls.forEach(function(poll){ %>
+                    <% if(currentUser && poll.author.id.equals(currentUser._id)){ %>
+                        <div class="list-group polls">
+                            <div class="list-group-item list-group-item-success">
+                                <h4 class="list-group-item-heading"><%= poll.name %></h4>
+                                <p class="list-group-item-text">by <em><%= poll.author.username %></em>
+                                <a href="/polls/<%= poll._id %>" class="btn btn-success btn-xs pull-right">Check this poll</a></p>
+                            </div>
+                        </div>
+                    <% } %>    
+                <% }); %>
+                <% if(!currentUser){ %>
+                    <h5>Please note: you have to be LOGGED IN in order to see all your posts.</h5>
+                <% } %>
+            
+        </div>
     </div>
 </div>
 
