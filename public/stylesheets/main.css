@@ -1,5 +1,9 @@
+footer{
+    margin-top: 300px;
+}
+
 .polls{
-    width: 50%;
+    width: 100%;
 }
 
 .formheader{
@@ -14,4 +18,8 @@
 #newoption{
     width: 30%;
     display: none;
+}
+
+#delete-form{
+    display: inline;
 }

@@ -11,7 +11,7 @@ var Poll    = require('./models/poll');
 var User    = require('./models/user');
 var seedDB  = require('./seed');
 
-seedDB();
+//seedDB(); //Seed the DB
 
 var pollRoutes  = require('./routes/polls');
 var indexRoutes = require('./routes/index');

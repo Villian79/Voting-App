@@ -6,7 +6,6 @@ var express     = require('express'),
 //APP ROUTES
 //INDEX route - show all the polls
 router.get('/', function(req, res){
-    console.log(req);
     //Get all the polls from DB
     Poll.find({}, (err, polls)=>{
         if(err) return console.error(err);
@@ -17,20 +16,23 @@ router.get('/', function(req, res){
 });
 
 //CREATE route - add new poll to DB
-router.post('/', function(req, res){
+router.post('/', isLoggedIn, function(req, res){
     //Get data from the form and add it to the polls array
     var name = req.body.name;
-    var author = req.body.author;
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
     var option1 = req.body.option1;
     var option2 = req.body.option2;
     var options = [option1, option2];
     var newPoll = {name: name, author: author, options: options};
     //Create a new poll and add it to the database
+    
     Poll.create(newPoll, function(err, poll){
         if(err) return console.error(err);
         else{
             console.log('New POLL has been added...');
-            console.log(poll);
         }
     });
     //Redirect to polls page
@@ -45,19 +47,16 @@ router.get('/new', isLoggedIn, function(req, res){
 //SHOW route - show info about certain poll
 router.get('/:id', function(req, res){
     //Find the poll with the provided ID
-    console.log(req.params.id);
-    
     Poll.findById(req.params.id, function(err, foundPoll){
         if(err) return console.error(err);
         else{
             //Render the template page for that poll
-            console.log(foundPoll);
             res.render('polls/show', {poll: foundPoll});
         }
     });
 });
 //EDIT route - allows user to complete the poll
-router.get('/:id/edit', function(req, res){
+router.get('/:id/edit', isLoggedIn, function(req, res){
     Poll.findById(req.params.id, function(err, foundPoll){
         if(err) return console.error(err);
         else{
@@ -78,14 +77,27 @@ router.put('/:id', function(req, res){
             else{
                 foundPoll.options.push(req.body.optionnew);
                 foundPoll.save();
-                console.log(foundPoll);
                 res.redirect('/polls/'+req.params.id);
             }
         }
     });
 });
 
-//MIDDlEWARE
+//DESTROY Route - delete existing poll
+
+router.delete('/:id', checkPollOwnership, (req, res)=>{
+    //Check if user is logged in
+        Poll.findByIdAndRemove(req.params.id, (err)=>{
+            if(err) return console.error(err);
+            res.redirect('/polls');
+        });
+});
+
+
+
+//================MIDDLEWARE functions======================
+
+//MIDDlEWARE - authentification
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
         return next();
@@ -93,5 +105,28 @@ function isLoggedIn(req, res, next){
     res.redirect("/login");
 }
 
+//MIDDLEWARE - authorisation
+function checkPollOwnership(req, res, next){
+    if(req.isAuthenticated()){
+        Poll.findById(req.params.id, function(err, foundPoll){
+            if(err){
+                res.redirect('back');
+            }
+            else{
+                //Check if user own a poll
+                if(foundPoll.author.id.equals(req.user._id)){
+                    next();
+                }
+                else{
+                    res.redirect('back');
+                }
+            }
+        });
+    }
+    else{
+        res.redirect('back');
+    }
+}
+//==========END OF MIDDLEWARE===============================
 
 module.exports = router;
