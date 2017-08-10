@@ -1,6 +1,7 @@
 var express     = require('express'),
     router      = express.Router(),
-    Poll        = require('../models/poll');
+    Poll        = require('../models/poll'),
+    middleware  = require('../middleware'); //Requires index.js by defauld. No need to specify it in the path
 
 
 //APP ROUTES
@@ -16,7 +17,7 @@ router.get('/', function(req, res){
 });
 
 //CREATE route - add new poll to DB
-router.post('/', isLoggedIn, function(req, res){
+router.post('/', middleware.isLoggedIn, function(req, res){
     //Get data from the form and add it to the polls array
     var name = req.body.name;
     var author = {
@@ -40,7 +41,7 @@ router.post('/', isLoggedIn, function(req, res){
     
 });
 //NEW route - show the form to create a new poll
-router.get('/new', isLoggedIn, function(req, res){
+router.get('/new', middleware.isLoggedIn, function(req, res){
     res.render('polls/new');
 });
 
@@ -56,7 +57,7 @@ router.get('/:id', function(req, res){
     });
 });
 //EDIT route - allows user to complete the poll
-router.get('/:id/edit', isLoggedIn, function(req, res){
+router.get('/:id/edit', middleware.isLoggedIn, function(req, res){
     Poll.findById(req.params.id, function(err, foundPoll){
         if(err) return console.error(err);
         else{
@@ -85,48 +86,12 @@ router.put('/:id', function(req, res){
 
 //DESTROY Route - delete existing poll
 
-router.delete('/:id', checkPollOwnership, (req, res)=>{
+router.delete('/:id', middleware.checkPollOwnership, (req, res)=>{
     //Check if user is logged in
         Poll.findByIdAndRemove(req.params.id, (err)=>{
             if(err) return console.error(err);
             res.redirect('/polls');
         });
 });
-
-
-
-//================MIDDLEWARE functions======================
-
-//MIDDlEWARE - authentification
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
-
-//MIDDLEWARE - authorisation
-function checkPollOwnership(req, res, next){
-    if(req.isAuthenticated()){
-        Poll.findById(req.params.id, function(err, foundPoll){
-            if(err){
-                res.redirect('back');
-            }
-            else{
-                //Check if user own a poll
-                if(foundPoll.author.id.equals(req.user._id)){
-                    next();
-                }
-                else{
-                    res.redirect('back');
-                }
-            }
-        });
-    }
-    else{
-        res.redirect('back');
-    }
-}
-//==========END OF MIDDLEWARE===============================
 
 module.exports = router;
