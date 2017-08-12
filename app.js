@@ -1,6 +1,7 @@
 var express                 = require('express'),
     app                     = express(),
     bodyParser              = require('body-parser'),
+    flash                   = require('connect-flash'),
     mongoose                = require('mongoose'),
     methodOverride          = require('method-override'),
     passport                = require('passport'),
@@ -25,6 +26,8 @@ db.once('open', function() {
   console.log('Voting App is connected to the DB');
 });
 
+app.use(flash());
+
 //PASSPORT config
 app.use(require('express-session')({
     secret: "This is my first complecated app",
@@ -45,6 +48,8 @@ app.use(methodOverride('_method'));
 
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success');
     next();
 });
 

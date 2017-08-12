@@ -73,11 +73,13 @@ router.put('/:id', function(req, res){
         if(err) return console.error(err);
         else{
             if(req.body.optionnew === ''){
+                req.flash('success', 'Thank you for your vote!');
                 res.redirect('/polls/'+req.params.id);
             }
             else{
                 foundPoll.options.push(req.body.optionnew);
                 foundPoll.save();
+                req.flash('success', 'Thank you for your vote!');
                 res.redirect('/polls/'+req.params.id);
             }
         }
@@ -90,6 +92,7 @@ router.delete('/:id', middleware.checkPollOwnership, (req, res)=>{
     //Check if user is logged in
         Poll.findByIdAndRemove(req.params.id, (err)=>{
             if(err) return console.error(err);
+            req.flash('success', 'Your poll was successfully deleted');
             res.redirect('/polls');
         });
 });

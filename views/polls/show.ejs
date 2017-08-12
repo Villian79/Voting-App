@@ -4,20 +4,14 @@
 <div class="container">
     
         <h1><%= poll.name %></h1>
-        <% for(var i = 0; i < poll.options.length; i++){ %>
-            <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" id="optionsRadios" class="optionsRadios" value=<%= poll.options[i] %> disabled>
-                        <%= poll.options[i] %>
-                </label>
-            </div>
-        <% }; %>
-             <div class="radio">
-                <label>
-                    <input type="radio" name="optionsRadios" id="newOptionRadio" value="newoption" disabled>
-                        Click here to add your own option
-                </label>
-            </div>
+        <ul>
+            <% for(var i = 0; i < poll.options.length; i++){ %>
+                <li>
+                    <%= poll.options[i] %>
+                </li>
+            <% }; %>
+        </ul>
+            
             <div class="form-group">
                 <input class="form-control" id="newoption" type="text" name="optionnew" placeholder="Add your own option here...">
             </div>
