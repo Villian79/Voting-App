@@ -26,16 +26,26 @@ router.post('/', middleware.isLoggedIn, function(req, res){
     };
     var option1 = req.body.option1;
     var option2 = req.body.option2;
-    var options = [option1, option2];
-    var newPoll = {name: name, author: author, options: options};
+    var options = [{
+        name: option1,
+        respondents: []
+        },
+        {
+        name: option2,
+        respondents: []
+        }];
+    var respondents = [];
+    var newPoll = {name: name, author: author, options: options, respondents: respondents};
     //Create a new poll and add it to the database
     
     Poll.create(newPoll, function(err, poll){
         if(err) return console.error(err);
         else{
             console.log('New POLL has been added...');
+            console.log(newPoll);
         }
     });
+
     //Redirect to polls page
     res.redirect('/polls');
     
@@ -73,12 +83,35 @@ router.put('/:id', function(req, res){
         if(err) return console.error(err);
         else{
             if(req.body.optionnew === ''){
-                req.flash('success', 'Thank you for your vote!');
-                res.redirect('/polls/'+req.params.id);
+                if(foundPoll.respondents.indexOf(req.user._id) >= 0){
+                    req.flash('error', 'You have already answered this poll. Go ahead and choose another one.');
+                    res.redirect('/polls');
+                }
+                else{
+                    foundPoll.respondents.push(req.user._id);
+                    foundPoll.options.forEach(function(option){
+                        if(option.name === req.body.optionsRadios){
+                            option.respondents.push(req.user._id);
+                        }
+                    });
+                    console.log(req.body);
+                    //foundPoll.options.respondents.push(req.user._id);
+                    foundPoll.save();
+                    console.log(foundPoll);
+                    req.flash('success', 'Thank you for your vote!');
+                    res.redirect('/polls/'+req.params.id);
+                }
             }
             else{
-                foundPoll.options.push(req.body.optionnew);
+                console.log(foundPoll.options);
+                var newOption = {
+                    name: req.body.optionnew,
+                    respondents: req.user._id
+                };
+                foundPoll.options.push(newOption);
+                foundPoll.respondents.push(req.user._id);
                 foundPoll.save();
+                console.log(foundPoll);
                 req.flash('success', 'Thank you for your vote!');
                 res.redirect('/polls/'+req.params.id);
             }

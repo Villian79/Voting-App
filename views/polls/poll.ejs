@@ -7,8 +7,8 @@
         <% for(var i = 0; i < poll.options.length; i++){ %>
             <div class="radio">
                 <label>
-                    <input type="radio" name="optionsRadios" id="optionsRadios" class="optionsRadios" value=<%= poll.options[i] %>>
-                        <%= poll.options[i] %>
+                    <input type="radio" name="optionsRadios" id="optionsRadios" class="optionsRadios" value=<%= poll.options[i].name %>>
+                        <%= poll.options[i].name %>
                 </label>
             </div>
         <% }; %>

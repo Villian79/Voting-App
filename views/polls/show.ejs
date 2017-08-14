@@ -2,25 +2,37 @@
 
 
 <div class="container">
-    
-        <h1><%= poll.name %></h1>
-        <ul>
-            <% for(var i = 0; i < poll.options.length; i++){ %>
-                <li>
-                    <%= poll.options[i] %>
-                </li>
-            <% }; %>
-        </ul>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h1><%= poll.name %></h1>
+            <ul>
+                <% for(var i = 0; i < poll.options.length; i++){ %>
+                    <li>
+                        <%= poll.options[i].name %>
+                    </li>
+                <% }; %>
+            </ul>
+                
+                <div class="form-group">
+                    <input class="form-control" id="newoption" type="text" name="optionnew" placeholder="Add your own option here...">
+                </div>
+                <a href="/polls/<%= poll._id %>/edit"><button class="btn btn-success btn-sm">Answer this poll</button></a>
+                <% if(currentUser && poll.author.id.equals(currentUser._id)){ %>
+                    <form id="delete-form" action="/polls/<%= poll._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger btn-sm">Delete this poll</button>
+                    </form>
+                <% } %>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <div>Total responses: <%=poll.respondents.length%></div>
+            <hr>
+            <% poll.options.forEach(function(option){ %>
+                <div><%= option.name %>: <%= option.respondents.length %></div>
+            <% }); %>
             
-            <div class="form-group">
-                <input class="form-control" id="newoption" type="text" name="optionnew" placeholder="Add your own option here...">
-            </div>
-            <a href="/polls/<%= poll._id %>/edit"><button class="btn btn-success btn-sm">Answer this poll</button></a>
-            <% if(currentUser && poll.author.id.equals(currentUser._id)){ %>
-                <form id="delete-form" action="/polls/<%= poll._id %>?_method=DELETE" method="POST">
-                    <button class="btn btn-danger btn-sm">Delete this poll</button>
-                </form>
-            <% } %>
+            
+        </div>
+    </div>        
 </div>
 
 
