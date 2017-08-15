@@ -3,37 +3,65 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <h1><%= poll.name %></h1>
-            <ul>
-                <% for(var i = 0; i < poll.options.length; i++){ %>
-                    <li>
-                        <%= poll.options[i].name %>
-                    </li>
-                <% }; %>
-            </ul>
-                
-                <div class="form-group">
-                    <input class="form-control" id="newoption" type="text" name="optionnew" placeholder="Add your own option here...">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="pollLayout">
+                <h1><%= poll.name %></h1>
+                <ul>
+                    <% for(var i = 0; i < poll.options.length; i++){ %>
+                        <li>
+                            <%= poll.options[i].name %>
+                        </li>
+                    <% }; %>
+                </ul>
+                    
+                    <div class="form-group">
+                        <input class="form-control" id="newoption" type="text" name="optionnew" placeholder="Add your own option here...">
+                    </div>
+                    <a href="/polls/<%= poll._id %>/edit"><button class="btn btn-success btn-sm">Answer this poll</button></a>
+                    <% if(currentUser && poll.author.id.equals(currentUser._id)){ %>
+                        <form id="delete-form" action="/polls/<%= poll._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger btn-sm">Delete this poll</button>
+                        </form>
+                    <% } %>
                 </div>
-                <a href="/polls/<%= poll._id %>/edit"><button class="btn btn-success btn-sm">Answer this poll</button></a>
-                <% if(currentUser && poll.author.id.equals(currentUser._id)){ %>
-                    <form id="delete-form" action="/polls/<%= poll._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger btn-sm">Delete this poll</button>
-                    </form>
-                <% } %>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-            <div>Total responses: <%=poll.respondents.length%></div>
-            <hr>
-            <% poll.options.forEach(function(option){ %>
-                <div><%= option.name %>: <%= option.respondents.length %></div>
-            <% }); %>
-            
-            
+        <div class = "container" id="chart">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <canvas id="myChart" width="20" height="20"></canvas>
+        </div>
         </div>
     </div>        
 </div>
 
+<script src="/js/chart.js"></script>
+
+
+<!--
+<script>
+    var ctx = "myChart";
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: "My Chart",
+                data: [],
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+-->
 
 <% include ../partials/footer %>

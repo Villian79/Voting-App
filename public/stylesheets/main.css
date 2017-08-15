@@ -23,3 +23,12 @@ footer{
 #delete-form{
     display: inline;
 }
+
+#chart {
+    width: 80%;
+}
+
+.pollLayout {
+    margin-left: 30%;
+    margin-bottom: 50px;
+}

@@ -1,7 +1,8 @@
 var express     = require('express'),
     router      = express.Router(),
     Poll        = require('../models/poll'),
-    middleware  = require('../middleware'); //Requires index.js by defauld. No need to specify it in the path
+    middleware  = require('../middleware'), //Requires index.js by defauld. No need to specify it in the path
+    Chart       = require('chart.js');
 
 
 //APP ROUTES
@@ -61,7 +62,7 @@ router.get('/:id', function(req, res){
     Poll.findById(req.params.id, function(err, foundPoll){
         if(err) return console.error(err);
         else{
-            //Render the template page for that poll
+            
             res.render('polls/show', {poll: foundPoll});
         }
     });
@@ -129,5 +130,18 @@ router.delete('/:id', middleware.checkPollOwnership, (req, res)=>{
             res.redirect('/polls');
         });
 });
+
+//Chart data route
+router.get('/:id/data', function(req, res){
+    //Find the poll with the provided ID
+    Poll.findById(req.params.id, function(err, foundPoll){
+        if(err) return console.error(err);
+        else{
+            
+            res.json(foundPoll);
+        }
+    });
+});
+
 
 module.exports = router;

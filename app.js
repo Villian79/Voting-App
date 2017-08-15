@@ -6,7 +6,9 @@ var express                 = require('express'),
     methodOverride          = require('method-override'),
     passport                = require('passport'),
     localStrategy           = require('passport-local'),
-    passportLocalMongoose   = require('passport-local-mongoose');
+    passportLocalMongoose   = require('passport-local-mongoose'),
+    Chart                   = require('chart.js');
+
 
 var Poll    = require('./models/poll');
 var User    = require('./models/user');
@@ -43,6 +45,7 @@ passport.deserializeUser(User.deserializeUser());
 //Config
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride('_method'));
 
