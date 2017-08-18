@@ -40,9 +40,6 @@ router.post('/', middleware.isLoggedIn, function(req, res){
             res.redirect('back');
         }
     });
-    
-    console.log(req.body);
-    console.log(options);
     var respondents = [];
     var newPoll = {name: name, author: author, options: options, respondents: respondents};
     //Create a new poll and add it to the database
