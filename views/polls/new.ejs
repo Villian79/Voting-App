@@ -8,12 +8,16 @@
             <div class="form-group">
                 <input class="form-control" type="text" name="name" placeholder="Poll title">
             </div>
-            
-            <div class="form-group">
-                <input class="form-control" type="text" name="option1" placeholder="Option 1">
+            <div id="formOptions">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="option[]" placeholder="Option 1">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="option[]" placeholder="Option 2">
+                </div>
             </div>
-            <div class="form-group">
-                <input class="form-control" type="text" name="option2" placeholder="Option 2">
+            <div class="form-group" id="newform">
+                <a href="#" class="btn btn-xs btn-success" id="newform">Add new option</a>
             </div>
             <div class="form-group">
                 <button class="btn btn-lg btn-primary btn-block">Submit!</button>
