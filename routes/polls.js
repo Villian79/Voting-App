@@ -43,7 +43,6 @@ router.post('/', middleware.isLoggedIn, function(req, res){
         if(err) return console.error(err);
         else{
             console.log('New POLL has been added...');
-            console.log(newPoll);
         }
     });
 
@@ -95,16 +94,13 @@ router.put('/:id', function(req, res){
                             option.respondents.push(req.user._id);
                         }
                     });
-                    console.log(req.body);
                     //foundPoll.options.respondents.push(req.user._id);
                     foundPoll.save();
-                    console.log(foundPoll);
                     req.flash('success', 'Thank you for your vote!');
                     res.redirect('/polls/'+req.params.id);
                 }
             }
             else{
-                console.log(foundPoll.options);
                 var newOption = {
                     name: req.body.optionnew,
                     respondents: req.user._id
@@ -112,7 +108,6 @@ router.put('/:id', function(req, res){
                 foundPoll.options.push(newOption);
                 foundPoll.respondents.push(req.user._id);
                 foundPoll.save();
-                console.log(foundPoll);
                 req.flash('success', 'Thank you for your vote!');
                 res.redirect('/polls/'+req.params.id);
             }
