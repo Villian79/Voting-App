@@ -26,8 +26,9 @@ router.post('/', middleware.isLoggedIn, function(req, res){
         username: req.user.username
     };
     var options = [];
-    var formOptions = req.body.option;
     
+    var formOptions = req.body.option;
+
     formOptions.forEach(function(option){
         if(option !== ''){
             options.push({
@@ -35,25 +36,27 @@ router.post('/', middleware.isLoggedIn, function(req, res){
                 respondents: []
             });
         }
-        else{
-            req.flash('error', 'Please, fill a the fields chosen by you...');
-            res.redirect('back');
-        }
     });
+
     var respondents = [];
     var newPoll = {name: name, author: author, options: options, respondents: respondents};
     //Create a new poll and add it to the database
-    
-    Poll.create(newPoll, function(err, poll){
-        if(err) return console.error(err);
-        else{
-            console.log('New POLL has been added...');
-        }
-    });
-
+    //At least two options should be present in the poll
+    if(options.length >= 2){
+        Poll.create(newPoll, function(err, poll){
+            if(err) return console.error(err);
+            else{
+                console.log('New POLL has been added...');
+            }
+        });
     //Redirect to polls page
+    req.flash('success', 'Your poll has been added. Thank you for your participation.');
     res.redirect('/polls');
-    
+    }
+    else{
+        req.flash('error', 'Please, select at least two options to create a poll...');
+        res.redirect('back');
+    }
 });
 //NEW route - show the form to create a new poll
 router.get('/new', middleware.isLoggedIn, function(req, res){
@@ -101,7 +104,6 @@ router.put('/:id', function(req, res){
                     });
                     //foundPoll.options.respondents.push(req.user._id);
                     foundPoll.save();
-                    console.log(foundPoll);
                     req.flash('success', 'Thank you for your vote!');
                     res.redirect('/polls/'+req.params.id);
                 }
